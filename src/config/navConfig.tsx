@@ -68,14 +68,12 @@ export const NAV_CONFIG: Record<UserRole, NavSection[]> = {
         { name: "Dashboard",      icon: <GridIcon />,       path: "/teacher" },
         {
           name: "Input Nilai",
-          icon: <ListIcon />,
-          subItems: [
-            { name: "Per Mata Pelajaran", path: "/teacher/report" },
-            { name: "Riwayat Input",      path: "/teacher/report/history" },
-          ],
+          icon: <ListIcon />, path: "/teacher/report" 
         },
-        { name: "Jadwal",         icon: <CalenderIcon />,   path: "/teacher/schedule" },
-        { name: "Profil",         icon: <UserCircleIcon />, path: "/teacher/profile" },
+        { name: "Data Siswa",     icon: <TableIcon />,      path: "/teacher/students" },
+
+        // { name: "Jadwal",         icon: <CalenderIcon />,   path: "/teacher/schedule" },
+        // { name: "Profil",         icon: <UserCircleIcon />, path: "/teacher/profile" },
       ],
     },
   ],

@@ -189,10 +189,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ role }) => {
             <>
               <Image
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/images/logo/logo_E-Raport.png"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={100}
+                height={100}
               />
               <Image
                 className="hidden dark:block"
@@ -258,7 +258,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ role }) => {
               E-Raport SPA
             </p>
             <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-              Copyright© Relig 2026
+              Copyright©2026 Relig.inc 
             </p>
           </div>
         </div>
