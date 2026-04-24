@@ -24,7 +24,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ role }) => {
   const pathname = usePathname();
 
   const sections: NavSection[] = NAV_CONFIG[role];
-  const roleMeta = ROLE_META[role] || ROLE_META["user"]; // Fallback to 'user' role meta if not found
+  const roleMeta = ROLE_META[role] || ROLE_META["parent"]; // Fallback to 'user' role meta if not found
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     sectionIdx: number;
@@ -189,22 +189,22 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ role }) => {
             <>
               <Image
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/images/logo/logo_E-Raport.png"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={100}
+                height={100}
               />
               <Image
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                src="/images/logo/logo_E-Raport.png"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={100}
+                height={100}
               />
             </>
           ) : (
             <Image
-              src="/images/logo/logo-icon.svg"
+              src="/images/logo/logo_E-Raport.png"
               alt="Logo"
               width={32}
               height={32}
@@ -258,7 +258,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ role }) => {
               E-Raport SPA
             </p>
             <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-              Copyright© Relig 2026
+              Copyright©2026 Relig.inc 
             </p>
           </div>
         </div>

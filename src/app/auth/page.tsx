@@ -18,5 +18,6 @@ export default function SignIn() {
         <p><a href="/parent " className="text-blue-500 hover:underline">Go to wali Page</a></p>
       </div>
     </div>;
-    </>);
+    </>
+    );
 }
