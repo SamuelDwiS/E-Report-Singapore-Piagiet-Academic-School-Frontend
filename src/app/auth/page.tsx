@@ -90,7 +90,7 @@ export default function AuthPage() {
             </div>
             <div className="flex justify-between">
               <span className="font-semibold text-indigo-700">Parent:</span>
-              <span>parent@gmail.com / parent23</span>
+              <span>parent@gmail.com / parent123</span>
             </div>
           </div>
         </div>
