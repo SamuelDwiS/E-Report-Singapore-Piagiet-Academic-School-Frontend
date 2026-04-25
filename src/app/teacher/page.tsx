@@ -12,7 +12,7 @@ export default function MentorDashboard() {
   return (
     <div className="flex flex-col gap-6 p-4">
       {/* Welcome Banner */}
-      <div className="bg-white dark:bg-white/[0.03] rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col gap-1 transition-colors">
         <h1 className="text-3xl font-semibold text-gray-800 dark:text-white/90">Halo, Teacher! 👋</h1>
         <p className="text-gray-500 dark:text-gray-400 mt-1">
           Selamat datang di dashboard Teacher anda.
