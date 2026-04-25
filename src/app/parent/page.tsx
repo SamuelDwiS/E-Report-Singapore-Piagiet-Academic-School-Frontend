@@ -1,5 +1,6 @@
   "use client"
 import React from 'react'
+import Link from 'next/link'
 import StatisticGrade from './components/StatisticGrade'
 
 const ParentDashboard = () => {
@@ -56,7 +57,7 @@ const ParentDashboard = () => {
           </div>
         </div>
 
-        {/* Kolom kanan: Catatan Wali Kelas
+        {/* Kolom kanan: Catatan Wali Kelas */}
         <div className="bg-white dark:bg-white/[0.03] rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm h-fit">
           <h3 className="font-semibold text-gray-800 dark:text-white/90 mb-3">Catatan Wali Kelas</h3>
           <div className="flex items-center gap-2 mb-3">
@@ -69,7 +70,7 @@ const ParentDashboard = () => {
             Ananda putri dari Pak Hartono menunjukkan kemajuan akademik yang baik.
             Menunjukkan kebiasaan belajar yang konsisten dan disiplin di kelas.
           </p>
-          <button className="text-sm text-brand-600 dark:text-brand-400 font-medium hover:underline">
+          <button className="text-sm text-blue-600 dark:text-blue-400 font-medium hover:underline">
             Lihat Raport Lengkap →
           </button>
         </div> */}

@@ -1,12 +1,9 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   REPORTS,
-  getLevelStyle,
-  getOverallAvg,
-  getOverallLevel,
   termToSlug,
   subjectToSlug,
 } from "../reportData";
@@ -16,10 +13,10 @@ function ScoreBadge({ score }: { score: string }) {
   const val = parseFloat(score);
   const colorClass =
     val >= 2.5
-      ? "bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400"
+      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
       : val >= 2.0
-      ? "bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400"
-      : "bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400";
+      ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+      : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
   return (
     <span
       className={`inline-flex items-center justify-center min-w-[52px] px-2.5 py-1 rounded-lg text-sm font-black ${colorClass}`}
@@ -53,35 +50,27 @@ export default function ReportDetailPage() {
     );
   }
 
-  const overallAvg = getOverallAvg(report.subjects);
-  const overallLevel = getOverallLevel(report.subjects);
-  const overallStyle = getLevelStyle(overallLevel);
-
   return (
-    <div className="space-y-6 p-4 md:p-6">
-
-      {/* ── Breadcrumb + Cetak Button ─────────────────────────────────── */}
-      <div className="flex items-center justify-between gap-4">
+    <div className="space-y-6 p-4 md:p-6 max-w-5xl mx-auto">
+      {/* ── Header & Navigation ────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/[0.03] p-4 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
         <nav className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
           <Link
             href="/parent/report"
-            className="hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors flex items-center gap-1.5"
+            className="hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors flex items-center gap-1.5"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
             Laporan Nilai
           </Link>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span className="text-gray-600 dark:text-gray-300 font-semibold">
-            {report.academicYear} — {report.term}
+          <span className="text-gray-600 dark:text-gray-300 font-semibold uppercase tracking-wider">
+            {report.term} — {report.academicYear}
           </span>
         </nav>
         <button
           onClick={() => window.print()}
-          className="flex items-center gap-2 text-sm font-bold bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl transition shrink-0 shadow-sm"
+          className="flex items-center gap-2 text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition shrink-0 shadow-sm"
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <polyline points="6 9 6 2 18 2 18 9" />
@@ -93,26 +82,26 @@ export default function ReportDetailPage() {
       </div>
 
       {/* ── Report Info Card ─────────────────────────────────────────── */}
-      <div className="bg-brand-900 dark:bg-brand-950 rounded-2xl p-6 text-white shadow-lg">
+      <div className="bg-indigo-900 dark:bg-indigo-950 rounded-2xl p-6 text-white shadow-lg">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
           <div>
-            <p className="text-brand-300 text-[10px] font-bold uppercase tracking-widest mb-1">
+            <p className="text-indigo-300 text-[10px] font-bold uppercase tracking-widest mb-1">
               Singapore School — Academic Report
             </p>
             <h1 className="text-xl font-black uppercase tracking-wide">
               {report.term} Report {report.academicYear}
             </h1>
-            <p className="text-brand-300 text-xs font-semibold uppercase mt-0.5 tracking-wide">
+            <p className="text-indigo-300 text-xs font-semibold uppercase mt-0.5 tracking-wide">
               Aesthetics Domain
             </p>
           </div>
-          <div className="text-left sm:text-right shrink-0">
-            <p className="text-brand-400 text-[10px] font-bold uppercase tracking-widest mb-0.5">Class</p>
+          <div className="text-right shrink-0">
+            <p className="text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-0.5">Class</p>
             <p className="text-2xl font-black">{report.class}</p>
           </div>
         </div>
 
-        <div className="mt-5 pt-4 border-t border-brand-800 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="mt-5 pt-4 border-t border-indigo-800 grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
             { label: "Name of Student", value: report.studentName },
             { label: "Class Teacher", value: report.mentor },
@@ -120,7 +109,7 @@ export default function ReportDetailPage() {
             { label: "Status", value: report.status },
           ].map((item) => (
             <div key={item.label}>
-              <p className="text-brand-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">
+              <p className="text-indigo-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">
                 {item.label}
               </p>
               <p className="text-sm font-bold text-white">{item.value}</p>
@@ -160,7 +149,7 @@ export default function ReportDetailPage() {
                   </span>
                   <Link
                     href={`/parent/report/${slug}/${subjectToSlug(subj.name)}`}
-                    className="ml-2 p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-brand-600 transition-colors"
+                    className="ml-2 p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-indigo-600 transition-colors"
                     title="Lihat Detail"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -234,9 +223,9 @@ export default function ReportDetailPage() {
             </p>
             <div className="space-y-2.5">
               {[
-                { range: "1.00 – 1.99", label: "Improving", dot: "bg-warning-500", text: "text-warning-600 dark:text-warning-400" },
-                { range: "2.00 – 2.49", label: "Meeting Expectations", dot: "bg-brand-500", text: "text-brand-600 dark:text-brand-400" },
-                { range: "2.50 – 3.00", label: "Exceeding Expectations", dot: "bg-success-500", text: "text-success-600 dark:text-success-400" },
+                { range: "1.00 – 1.99", label: "Improving", dot: "bg-amber-500", text: "text-amber-600 dark:text-amber-400" },
+                { range: "2.00 – 2.49", label: "Meeting Expectations", dot: "bg-blue-500", text: "text-blue-600 dark:text-blue-400" },
+                { range: "2.50 – 3.00", label: "Exceeding Expectations", dot: "bg-emerald-500", text: "text-emerald-600 dark:text-emerald-400" },
               ].map((s) => (
                 <div key={s.label} className="flex items-center gap-2.5">
                   <div className={`w-2 h-2 rounded-full shrink-0 ${s.dot}`} />
@@ -248,30 +237,18 @@ export default function ReportDetailPage() {
                   </span>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* Teachers */}
-          <div>
-            <p className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">
-              Teachers
-            </p>
-            <div className="space-y-2.5">
-              {report.subjects.map((subj) => (
-                <div key={subj.name} className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-gray-800 dark:text-white/80 shrink-0">
-                    {subj.teacher}
-                  </span>
-                  <span className="text-xs text-gray-400 dark:text-gray-500">
-                    [{subj.name}]
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+            </tbody>
+          </table>
         </div>
       </div>
-
     </div>
+  );
+}
+
+export default function ReportDetailPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center font-bold">Loading Raport...</div>}>
+      <ReportDetailContent />
+    </Suspense>
   );
 }
