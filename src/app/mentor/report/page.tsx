@@ -54,48 +54,78 @@ export default function MentorReportPage() {
 
       {/* Tabel Siswa */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden transition-colors">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[600px]">
-          <thead>
-            <tr className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
-              <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">NIS</th>
-              <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">Nama Siswa</th>
-              <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">Kelas</th>
-                <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">Terms</th>
-              <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">Status</th>
-              <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400 text-center">Aksi</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
-            {students.map((student) => (
-              <tr key={student.id} className="hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors">
-                <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{student.nis}</td>
-                <td className="px-6 py-4 text-sm font-bold text-gray-800 dark:text-gray-200">{student.name}</td>
-                <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{student.class}</td>
-                <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{student.Terms}</td>
-                <td className="px-6 py-4">
-                  <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
-                    student.status === 'Lengkap' 
-                      ? 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-400' 
-                      : 'bg-warning-100 dark:bg-warning-900/30 text-warning-700 dark:text-warning-400'
-                  }`}>
-                    {student.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-center">
-                  <div className="flex gap-2 justify-center">
-                    <button className="bg-brand-500 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-brand-600 transition-all shadow-sm">
-                      Detail Report
-                    </button>
-                    <button onClick={() => window.print()} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all" title="Print/Export PDF">
-                      🖨️ Export PDF
-                    </button>
-                  </div>
-                </td>
+        {/* Desktop View: Table */}
+        <div className="hidden lg:block overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
+                <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">NIS</th>
+                <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">Nama Siswa</th>
+                <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">Kelas</th>
+                  <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">Terms</th>
+                <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400">Status</th>
+                <th className="px-6 py-4 text-xs uppercase font-bold text-gray-500 dark:text-gray-400 text-center">Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
+              {students.map((student) => (
+                <tr key={`desktop-${student.id}`} className="hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors">
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{student.nis}</td>
+                  <td className="px-6 py-4 text-sm font-bold text-gray-800 dark:text-gray-200">{student.name}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{student.class}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{student.Terms}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
+                      student.status === 'Lengkap' 
+                        ? 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-400' 
+                        : 'bg-warning-100 dark:bg-warning-900/30 text-warning-700 dark:text-warning-400'
+                    }`}>
+                      {student.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <div className="flex gap-2 justify-center">
+                      <button className="bg-brand-500 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-brand-600 transition-all shadow-sm">
+                        Detail Report
+                      </button>
+                      <button onClick={() => window.print()} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all" title="Print/Export PDF">
+                        🖨️ Export PDF
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile View: Cards */}
+        <div className="lg:hidden divide-y divide-gray-50 dark:divide-gray-700">
+          {students.map((student) => (
+            <div key={`mobile-${student.id}`} className="p-5 space-y-4 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-colors">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-bold text-gray-800 dark:text-gray-200 leading-tight">{student.name}</h3>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400 font-mono mt-1">NIS: {student.nis} • {student.class}</p>
+                </div>
+                <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase ${
+                  student.status === 'Lengkap' 
+                    ? 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-400' 
+                    : 'bg-warning-100 dark:bg-warning-900/30 text-warning-700 dark:text-warning-400'
+                }`}>
+                  {student.status}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <button className="bg-brand-500 text-white py-2.5 rounded-xl text-xs font-bold shadow-md shadow-brand-200 dark:shadow-none active:scale-[0.98] transition-all">
+                  Detail Report
+                </button>
+                <button onClick={() => window.print()} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 py-2.5 rounded-xl text-xs font-bold active:scale-[0.98] transition-all">
+                  🖨️ Export PDF
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
