@@ -11,7 +11,7 @@ const ParentDashboard = () => {
         {/* Kolom kiri: Sambutan & Ringkasan Nilai */}
         <div className="md:col-span-2 space-y-6">
           {/* Sambutan */}
-          <div className="bg-white dark:bg-white/[0.03] rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm transition-colors">
             <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">Selamat Datang, Budi!</h2>
             <p className="text-gray-500 dark:text-gray-400 mt-1">Selamat datang Tatang, Wali Murid</p>
           </div>
@@ -19,7 +19,7 @@ const ParentDashboard = () => {
           {/* Ringkasan Nilai & Performa */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Ringkasan Nilai */}
-            <div className="bg-white dark:bg-white/[0.03] rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm transition-colors">
               <h3 className="font-semibold text-gray-800 dark:text-white/90 mb-3">Ringkasan Nilai Terbaru</h3>
               <div className="flex flex-wrap gap-2 mb-4">
                 <span className="bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 px-3 py-1 rounded-full text-sm font-medium">Math A</span>
@@ -31,7 +31,7 @@ const ParentDashboard = () => {
             </div>
 
             {/* Performa Mata Pelajaran */}
-            <div className="bg-white dark:bg-white/[0.03] rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm transition-colors">
               <h3 className="font-semibold text-gray-800 dark:text-white/90 mb-3">Performa Mata Pelajaran</h3>
               <div className="space-y-3">
                 {[
@@ -58,7 +58,7 @@ const ParentDashboard = () => {
         </div>
 
         {/* Kolom kanan: Catatan Wali Kelas */}
-        <div className="bg-white dark:bg-white/[0.03] rounded-2xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm h-fit">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm h-fit transition-colors">
           <h3 className="font-semibold text-gray-800 dark:text-white/90 mb-3">Catatan Wali Kelas</h3>
           <div className="flex items-center gap-2 mb-3">
             <div className="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/40 flex items-center justify-center text-brand-600 dark:text-brand-400 font-bold text-sm">
@@ -73,7 +73,7 @@ const ParentDashboard = () => {
           <button className="text-sm text-blue-600 dark:text-blue-400 font-medium hover:underline">
             Lihat Raport Lengkap →
           </button>
-        </div> */}
+        </div> {/*snvksdnvn*/}
       </div>
 
       {/* Baris 2: Grafik Statistik Nilai – full width */}
