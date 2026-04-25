@@ -95,7 +95,7 @@ export default function ReportPage() {
                 {report.subjects.map((subj, index) => {
                   const slug = termToSlug(report);
                   return (
-                    <tr key={subj.kode} className="hover:bg-gray-50 dark:hover:bg-indigo-900/20 transition-colors group">
+                    <tr className="hover:bg-gray-50 dark:hover:bg-indigo-900/20 transition-colors group">
                       <td className="px-6 py-4 text-sm font-mono text-gray-500 text-center">
                         {index + 1}
                       </td>
@@ -130,4 +130,4 @@ export default function ReportPage() {
       )}
     </div>
   );
-}
+}

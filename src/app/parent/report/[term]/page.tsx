@@ -66,7 +66,7 @@ function ReportDetailContent() {
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {report.subjects.map((subj, index) => (
-                <tr key={subj.kode} className="hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors group">
+                <tr className="hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors group">
                   <td className="px-6 py-4 text-sm font-mono text-gray-500 text-center">
                     {index + 1}
                   </td>

@@ -72,7 +72,7 @@ export default function SubjectDetailPage() {
             </nav>
             <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3 justify-center sm:justify-start">
               <span className="bg-indigo-500 w-2 h-8 rounded-full" />
-              {currentSubject.domain}
+              {currentSubject.domain || "GENERAL DOMAIN"}
             </h1>
             <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">
               Laporan Penilaian Sub-materi Siswa — {report.term} {report.academicYear}
@@ -136,7 +136,7 @@ export default function SubjectDetailPage() {
                    <div className="w-1.5 h-6 bg-indigo-500 rounded-full" />
                    <h3 className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wide">{subj.name}</h3>
                 </div>
-                <span className="text-[10px] font-bold text-gray-400 uppercase italic">Teacher: {subj.teacher}</span>
+                {/* <span className="text-[10px] font-bold text-gray-400 uppercase italic">Teacher: {subj.teacher}</span> */}
               </div>
               <div className="p-6">
                 <div className="space-y-4">
@@ -169,7 +169,7 @@ export default function SubjectDetailPage() {
           {/* Student Info Print */}
           <div className="flex justify-between items-start border-b border-black pb-2">
             <div className="space-y-1">
-              <p className="text-xs font-black uppercase tracking-wide italic">{currentSubject.domain}</p>
+              <p className="text-xs font-black uppercase tracking-wide italic">{currentSubject.domain || "GENERAL DOMAIN"}</p>
               <div className="flex items-center gap-2 text-xs italic">
                 <span>Name of Student:</span>
                 <span className="font-bold border-b border-black min-w-[200px]">{report.studentName}</span>
