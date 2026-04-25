@@ -76,9 +76,9 @@ export default function MentorStudentsPage() {
         </div>
 
         {/* Filter, Search, Action */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-col md:flex-row w-full md:w-auto items-center gap-3">
           <select 
-            className="px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+            className="w-full md:w-auto px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors"
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
           >
@@ -88,13 +88,13 @@ export default function MentorStudentsPage() {
           <input 
             type="text" 
             placeholder="Cari NIS / Nama..." 
-            className="px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+            className="w-full md:w-auto px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button 
             onClick={openAddModal}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all ml-auto md:ml-0 shadow-sm"
+            className="w-full md:w-auto bg-brand-500 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-brand-600 transition-all shadow-sm"
           >
             + Tambah Siswa
           </button>
@@ -118,11 +118,11 @@ export default function MentorStudentsPage() {
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
               {filteredStudents.length > 0 ? filteredStudents.map((student) => (
-                <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-indigo-900/20 transition-colors">
+                <tr key={student.id} className="hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors">
                   <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{student.nis}</td>
                   <td className="px-6 py-4 text-sm font-bold text-gray-800 dark:text-gray-200">{student.name}</td>
                   <td className="px-6 py-4">
-                    <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400">
                       {student.year}
                     </span>
                   </td>
@@ -133,13 +133,13 @@ export default function MentorStudentsPage() {
                     <div className="flex gap-2 justify-center">
                       <button 
                         onClick={() => openEditModal(student)}
-                        className="bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-amber-200 dark:hover:bg-amber-900/60 transition-all border border-amber-200 dark:border-amber-800"
+                        className="bg-warning-100 dark:bg-warning-900/40 text-warning-700 dark:text-warning-400 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-warning-200 dark:hover:bg-warning-900/60 transition-all border border-warning-200 dark:border-warning-800"
                       >
                         ✏️ Edit
                       </button>
                       <button 
                         onClick={() => handleDelete(student.id)}
-                        className="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-200 dark:hover:bg-red-900/60 transition-all border border-red-200 dark:border-red-800"
+                        className="bg-error-100 dark:bg-error-900/40 text-error-700 dark:text-error-400 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-error-200 dark:hover:bg-error-900/60 transition-all border border-error-200 dark:border-error-800"
                       >
                         🗑️ Hapus
                       </button>
@@ -183,7 +183,7 @@ export default function MentorStudentsPage() {
                     <input 
                       required
                       type="text" 
-                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors dark:text-white"
+                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors dark:text-white"
                       placeholder="Masukkan NIS..."
                       value={formData.nis}
                       onChange={(e) => setFormData({...formData, nis: e.target.value})}
@@ -195,7 +195,7 @@ export default function MentorStudentsPage() {
                     <input 
                       required
                       type="text" 
-                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors dark:text-white"
+                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors dark:text-white"
                       placeholder="Masukkan nama lengkap siswa..."
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
@@ -205,7 +205,7 @@ export default function MentorStudentsPage() {
                   <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Year / Kelas</label>
                     <select 
-                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors dark:text-white"
+                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors dark:text-white"
                       value={formData.year}
                       onChange={(e) => setFormData({...formData, year: e.target.value})}
                     >
@@ -216,7 +216,7 @@ export default function MentorStudentsPage() {
                   <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Gender</label>
                     <select 
-                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors dark:text-white"
+                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors dark:text-white"
                       value={formData.gender}
                       onChange={(e) => setFormData({...formData, gender: e.target.value})}
                     >
@@ -230,7 +230,7 @@ export default function MentorStudentsPage() {
                     <input 
                       required
                       type="text" 
-                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors dark:text-white"
+                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors dark:text-white"
                       placeholder="Masukkan alamat..."
                       value={formData.address}
                       onChange={(e) => setFormData({...formData, address: e.target.value})}
@@ -242,7 +242,7 @@ export default function MentorStudentsPage() {
                     <input 
                       required
                       type="text" 
-                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors dark:text-white"
+                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors dark:text-white"
                       placeholder="Masukkan nama mentor..."
                       value={formData.mentor}
                       onChange={(e) => setFormData({...formData, mentor: e.target.value})}
@@ -254,13 +254,13 @@ export default function MentorStudentsPage() {
                   <button 
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-transparent transition-colors"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-transparent transition-colors"
                   >
                     Batal
                   </button>
                   <button 
                     type="submit"
-                    className="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-colors"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-brand-500 hover:bg-brand-600 shadow-sm transition-colors"
                   >
                     {editingId ? "Simpan Perubahan" : "Tambahkan"}
                   </button>
