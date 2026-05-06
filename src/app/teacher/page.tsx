@@ -17,9 +17,6 @@ export default function MentorDashboard() {
         <p className="text-gray-500 dark:text-gray-400 mt-1">
           Selamat datang di dashboard Teacher anda.
         </p>
-        {/* <button className="mt-6 bg-white text-indigo-600 px-6 py-2 rounded-xl font-bold text-sm hover:bg-gray-100 transition-all">
-          Lengkapi Sekarang
-        </button> */}
       </div>
 
       {/* Stats Cards */}

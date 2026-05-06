@@ -9,7 +9,7 @@
 // export default function AdminLayout({
 //   children,
 // }: {
-//   children: React.ReactNode;A
+//   children: React.ReactNode;
 // }) {
 //   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
 
@@ -38,3 +38,13 @@
 //     <>{children}</>
 //   );
 // }
+
+import React from "react";
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
+}
