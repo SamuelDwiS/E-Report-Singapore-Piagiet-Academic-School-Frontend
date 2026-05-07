@@ -233,7 +233,7 @@ export const REPORTS: TermReport[] = [
         ],
         average: "2.75",
         level: "Exceeding",
-      }
+      },
       {
         name: "BAHASA INDONESIA",
         teacher: "Bu Sari",
