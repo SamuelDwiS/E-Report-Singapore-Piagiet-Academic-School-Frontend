@@ -2,25 +2,56 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import api from '@/lib/axios';
 
 export default function AuthPage() {
   const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
-    if (email === 'mentor@gmail.com' && password === 'mentor123') {
-      router.push('/mentor');
-    } else if (email === 'teacher@gmail.com' && password === 'teacher123') {
-      router.push('/teacher');
-    } else if (email === 'parent@gmail.com' && password === 'parent123') {
-      router.push('/parent');
-    } else {
-      setError('Email atau password salah');
+   try {
+      
+      const response = await api.post('/login', {
+        email: email,
+        password: password
+      });
+      
+      const data = response.data; 
+      if (data.success) {
+
+
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+
+        const role = data.user.role;
+        if (role === 'mentor') {
+          router.push('/mentor');
+        } else if (role === 'teacher') {
+          router.push('/teacher');
+        } else if (role === 'parent') {
+          router.push('/parent');
+        } else if (role === 'admin') {
+          router.push('/admin');
+        }
+      }
+    } catch (err: any) {
+
+      if (err.response && err.response.data) {
+        setError(err.response.data.message || 'Login failed. Please check your credentials.');
+      } else {
+        setError('Connection failed. Is the backend server running?');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,7 +60,7 @@ export default function AuthPage() {
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-900">E-Report</h1>
-          {/* <p className="mt-2 text-sm text-gray-600">Please sign in to your account</p> */}
+          <p className="mt-2 text-sm text-gray-600">Singapore School Piaget Academic</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -71,9 +102,10 @@ export default function AuthPage() {
 
           <button
             type="submit"
-            className="flex w-full justify-center rounded-md border border-transparent bg-brand-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-colors"
+            disabled={loading}
+            className="flex w-full justify-center rounded-md border border-transparent bg-brand-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-colors disabled:bg-brand-300"
           >
-            Sign in
+            {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
         
