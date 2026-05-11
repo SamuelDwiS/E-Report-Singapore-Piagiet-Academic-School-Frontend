@@ -24,6 +24,11 @@ Menciptakan antarmuka yang premium, bersih, dan intuitif. Navigasi harus terasa 
 - **Navigation**: Gunakan `router.replace` untuk kembali ke halaman daftar agar tidak meninggalkan history rute detail.
 - **Active State**: Sidebar harus tetap menyorot menu yang relevan (misal: tetap menyala di "Siswa & Penilaian" saat membuka form report).
 
+## 🤝 Collaborative Assessment & UI Handling
+- **Multi-Teacher UI**: Form penilaian harus mampu menampilkan kriteria dari guru lain dalam satu grup raport yang sama.
+- **Read-Only State**: Gunakan atribut `disabled` pada input kriteria yang bukan milik guru tersebut (`is_mine: false`).
+- **Visual Distinction**: Berikan indikator visual (seperti warna background berbeda) untuk kriteria yang hanya bersifat "View-Only" bagi guru tersebut.
+
 ## 🔗 API Integration
 - Semua request menggunakan Axios instance (`@/lib/axios`).
 - Gunakan `invalidateQueries` setelah mutasi (simpan/hapus) untuk memastikan data di halaman lain tetap up-to-date.
