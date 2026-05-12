@@ -80,11 +80,7 @@ export const NAV_CONFIG: Record<UserRole, NavSection[]> = {
         {
           name: "Report",
           icon: <PageIcon />,
-          path: "/parent/report"
-          // subItems: [
-          //   { name: "Lihat Raport",   path: "/parent/report" },
-          //   { name: "Grafik Nilai",   path: "/parent/report/chart" },
-          // ],
+          path: "/parent/report/students"
         },
         // { name: "Catatan Guru",   icon: <ListIcon />,       path: "/parent/notes" },
         // { name: "Jadwal",         icon: <CalenderIcon />,   path: "/parent/schedule" },
