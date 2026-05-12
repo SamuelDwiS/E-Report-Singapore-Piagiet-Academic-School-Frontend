@@ -21,8 +21,9 @@ api.interceptors.response.use(
         {
             if(typeof window !== 'undefined')
             {
-                // Clear the role cookie manually if session is invalid
+                // Clear the role and XSRF cookies manually if session is invalid
                 document.cookie = "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 
                 // Redirect to auth page when session expires or CSRF fails
                 window.location.href= '/auth';            

@@ -1,81 +1,72 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { REPORTS, subjectToSlug, termToSlug } from "./reportData";
+import api from "@/lib/axios";
 
 export default function ReportPage() {
-  // Static options for Class Level (Year 1 - 12) and Term (Term 1 - 4)
-  const availableClasses = useMemo(() => Array.from({ length: 12 }, (_, i) => `Year ${i + 1}`), []);
-  const availableTerms = useMemo(() => Array.from({ length: 4 }, (_, i) => `Term ${i + 1}`), []);
+  const searchParams = useSearchParams();
+  const studentId = searchParams.get('student_id');
 
-  // Default to the first report's class and term
-  const [selectedClass, setSelectedClass] = useState(REPORTS[0]?.class || "");
-  const [selectedTerm, setSelectedTerm] = useState(REPORTS[0]?.term || "");
+  // 1. Fetch data anak untuk info header
+  const { data: children } = useQuery({
+    queryKey: ['parent-children'],
+    queryFn: async () => {
+      const response = await api.get('/parent/children');
+      return response.data.data;
+    }
+  });
 
-  // Find the report matching the selected class and term
-  const report = useMemo(() => {
-    return REPORTS.find((r) => r.class === selectedClass && r.term === selectedTerm);
-  }, [selectedClass, selectedTerm]);
+  const selectedChild = children?.find((c: any) => c.student_id === Number(studentId));
+
+  // 2. Fetch data raport asli
+  const { data: reports, isLoading } = useQuery({
+    queryKey: ['student-reports', studentId],
+    queryFn: async () => {
+      if (!studentId) return [];
+      const response = await api.get(`/parent/children/${studentId}/reports`);
+      return response.data.data;
+    },
+    enabled: !!studentId
+  });
+
+  if (!studentId) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-gray-500">Silakan pilih anak terlebih dahulu dari Dashboard.</p>
+        <Link href="/parent" className="text-brand-600 font-bold mt-4 inline-block"> Kembali ke Dashboard</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-4 md:p-6 max-w-5xl mx-auto">
-      {/* ── Header & Filters ────────────────────────────────────────── */}
+      {/* ── Header ────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 dark:text-white">Laporan Nilai</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Rekap raport siswa per term akademik</p>
+          <h1 className="text-2xl font-black text-gray-900 dark:text-white">Laporan Nilai Lengkap</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+            Siswa: <span className="font-bold text-brand-600">{selectedChild?.name_student || '...'}</span> ({selectedChild?.level_class})
+          </p>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-          <div className="flex flex-col gap-1.5 w-full sm:w-auto">
-            <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide">Class Level</label>
-            <div className="relative">
-              <select
-                value={selectedClass}
-                onChange={(e) => setSelectedClass(e.target.value)}
-                className="appearance-none bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-semibold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-4 pr-10 py-2.5 text-gray-700 dark:text-gray-200 cursor-pointer outline-none transition-all"
-              >
-                {availableClasses.map((cls) => (
-                  <option key={cls} value={cls}>{cls}</option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex flex-col gap-1.5 w-full sm:w-auto">
-            <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide">Term</label>
-            <div className="relative">
-              <select
-                value={selectedTerm}
-                onChange={(e) => setSelectedTerm(e.target.value)}
-                className="appearance-none bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-semibold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-4 pr-10 py-2.5 text-gray-700 dark:text-gray-200 cursor-pointer outline-none transition-all"
-              >
-                {availableTerms.map((term) => (
-                  <option key={term} value={term}>{term}</option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Link 
+          href="/parent"
+          className="px-4 py-2 text-sm font-bold text-gray-500 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+        >
+           Kembali ke Dashboard
+        </Link>
       </div>
 
       {/* ── Content ─────────────────────────────────────── */}
-      {!report ? (
+      {isLoading ? (
+        <div className="text-center py-10 text-gray-500">Memuat data raport...</div>
+      ) : !reports || reports.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[300px] gap-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
           <div className="text-4xl">📭</div>
           <p className="text-gray-500 dark:text-gray-400 font-medium text-center">
-            Raport tidak ditemukan untuk <strong className="text-gray-700 dark:text-gray-300">{selectedClass}</strong> — <strong className="text-gray-700 dark:text-gray-300">{selectedTerm}</strong>.
+            Belum ada nilai yang diinput oleh guru untuk periode ini.
           </p>
         </div>
       ) : (
@@ -86,76 +77,70 @@ export default function ReportPage() {
               <thead>
                 <tr className="bg-gray-50 dark:bg-gray-900/50">
                   <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-gray-500 w-16 text-center">No</th>
-                  <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-gray-500">Subject</th>
-                  <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-gray-500">Teacher</th>
-                  <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-gray-500 text-center">Nilai</th>
-                  <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-gray-500 text-center">Action</th>
+                  <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-gray-500">Mata Pelajaran</th>
+                  <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-gray-500 text-center">Nilai Rata-rata</th>
+                  <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-gray-500 text-center">Catatan Mentor</th>
+                  <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-gray-500 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                {report.subjects.map((subj, index) => {
-                  const slug = termToSlug(report);
-                  return (
-                    <tr key={`desktop-${subj.name}`} className="hover:bg-gray-50 dark:hover:bg-indigo-900/20 transition-colors group">
-                      <td className="px-6 py-4 text-sm font-mono text-gray-500 text-center">
-                        {index + 1}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-sm font-bold text-gray-800 dark:text-white/90">
-                          {subj.name}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                          {subj.teacher}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-center font-black text-gray-800 dark:text-white tabular-nums">
-                        {parseFloat(subj.average).toFixed(1)}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <Link
-                          href={`/parent/report/${slug}/${subjectToSlug(subj.name)}`}
-                          className="inline-block px-4 py-1.5 rounded-lg text-[10px] font-bold bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 transition-all"
-                        >
-                          Detail
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {reports.map((report: any, index: number) => (
+                  <tr key={report.report_id} className="hover:bg-gray-50 dark:hover:bg-brand-900/20 transition-colors group">
+                    <td className="px-6 py-4 text-sm font-mono text-gray-500 text-center">{index + 1}</td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-bold text-gray-800 dark:text-white/90">
+                        {report.subject?.category_subject}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-center font-black text-brand-600 tabular-nums">
+                      {parseFloat(report.average_value).toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 text-xs text-gray-500 italic max-w-xs truncate">
+                      {report.mentor_note || '-'}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <Link
+                        href={`/parent/report/detail?report_id=${report.report_id}`}
+                        className="inline-block px-4 py-1.5 rounded-lg text-[10px] font-bold bg-brand-600 text-white shadow-sm hover:bg-brand-700 transition-all"
+                      >
+                        Detail
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
 
           {/* Mobile View: Cards */}
           <div className="md:hidden divide-y divide-gray-100 dark:divide-gray-700">
-            {report.subjects.map((subj, index) => {
-              const slug = termToSlug(report);
-              return (
-                <div key={`mobile-${subj.name}`} className="p-5 hover:bg-gray-50 dark:hover:bg-indigo-900/10 transition-colors">
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex gap-3">
-                      <span className="text-[10px] font-mono text-gray-400 mt-1">{index + 1}</span>
-                      <div>
-                        <h3 className="text-sm font-bold text-gray-900 dark:text-white leading-tight mb-1">{subj.name}</h3>
-                        <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">{subj.teacher}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Score</p>
-                      <p className="text-lg font-black text-indigo-600 dark:text-indigo-400">{parseFloat(subj.average).toFixed(1)}</p>
+            {reports.map((report: any, index: number) => (
+              <div key={report.report_id} className="p-5 hover:bg-gray-50 dark:hover:bg-brand-900/10 transition-colors">
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex gap-3">
+                    <span className="text-[10px] font-mono text-gray-400 mt-1">{index + 1}</span>
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-900 dark:text-white leading-tight mb-1">
+                        {report.subject?.category_subject}
+                      </h3>
+                      <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider truncate max-w-[150px]">
+                        {report.mentor_note || 'Tanpa catatan mentor'}
+                      </p>
                     </div>
                   </div>
-                  <Link
-                    href={`/parent/report/${slug}/${subjectToSlug(subj.name)}`}
-                    className="block w-full text-center py-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-md active:scale-[0.98] transition-all"
-                  >
-                    View Detail
-                  </Link>
+                  <div className="text-right">
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Score</p>
+                    <p className="text-lg font-black text-brand-600">{parseFloat(report.average_value).toFixed(2)}</p>
+                  </div>
                 </div>
-              );
-            })}
+                <Link
+                  href={`/parent/report/detail?report_id=${report.report_id}`}
+                  className="block w-full text-center py-2.5 rounded-xl text-xs font-bold bg-brand-600 text-white shadow-md active:scale-[0.98] transition-all"
+                >
+                  View Detail
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       )}

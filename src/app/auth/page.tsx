@@ -12,18 +12,29 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Clean up stale data on mount
+  React.useEffect(() => {
+    // 1. Clear LocalStorage
+    localStorage.removeItem('user');
+    
+    // 2. Clear Auth Cookies (XSRF & Session)
+    // Catatan: laravel_session biasanya HttpOnly, jadi tidak bisa dihapus via JS,
+    // tapi kita bisa menghapus role dan XSRF-TOKEN untuk memicu refresh.
+    document.cookie = "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
    try {
-      // 1. Ambil CSRF Cookie dari Laravel terlebih dahulu
-      await api.get('/sanctum/csrf-cookie', {
-        baseURL: process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:8000'
-      });
+      // 1. Ambil CSRF Cookie dari Laravel (Gunakan URL absolut agar lebih aman)
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:8000';
+      await api.get(`${apiBaseUrl}/sanctum/csrf-cookie`);
 
-      // 2. Lakukan proses login (Cookie akan tertanam otomatis jika sukses)
+      // 2. Lakukan proses login
       const response = await api.post('/login', {
         email: email,
         password: password
