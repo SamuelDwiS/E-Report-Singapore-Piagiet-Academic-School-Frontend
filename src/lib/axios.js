@@ -13,17 +13,18 @@ const api = axios.create({
     withXSRFToken: true 
 });
 
-// Interceptor Auto Response if unauthorized (401)
+// Interceptor Auto Response if unauthorized (401) or CSRF token mismatch (419)
 api.interceptors.response.use(
     (response) => response,
     (error)   => {
-        if(error.response && error.response.status == 401)
+        if(error.response && (error.response.status === 401 || error.response.status === 419))
         {
             if(typeof window !== 'undefined')
             {
-                document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+                // Clear the role cookie manually if session is invalid
+                document.cookie = "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 
-                // Redirect to auth page when session expires
+                // Redirect to auth page when session expires or CSRF fails
                 window.location.href= '/auth';            
             }
         }
