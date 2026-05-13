@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import api from '@/lib/axios'
 import StatisticGrade from './components/StatisticGrade'
 import Link from 'next/link'
-import Skeleton from '@/components/common/Skeleton' // Asumsi ada skeleton loader
+// import Skeleton from '@/components/common/Skeleton' // Asumsi ada skeleton loader
 
 const ParentDashboard = () => {
   const [selectedChildId, setSelectedChildId] = useState<number | null>(null);
