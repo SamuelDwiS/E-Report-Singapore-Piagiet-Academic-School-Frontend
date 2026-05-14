@@ -33,11 +33,14 @@ type Report = {
   subject: {
     category_subject: string;
     term: string;
+    report_group_key?: string | null;
     teacher?: {
       name: string;
     };
   };
   report_details?: any[];
+  _isGrouped?: boolean;
+  _childReports?: Report[];
 };
 
 type MentorClass = {
@@ -60,7 +63,7 @@ function MentorReportContent() {
 
   // State for editable descriptions
   const [localDescriptions, setLocalDescriptions] = useState<Record<number, string>>({});
-  const [savingId, setSavingId] = useState<number | null>(null);
+  const [savingId, setSavingId] = useState<number | null>(null); // Still use criteriaId for saving identifier
   const [statusMessage, setStatusMessage] = useState<{ id: number, type: 'success' | 'error', text: string } | null>(null);
   const [openAccordions, setOpenAccordions] = useState<Record<number, boolean>>({});
 
@@ -101,19 +104,21 @@ function MentorReportContent() {
 
   // 4. Mutation for updating description
   const updateDescriptionMutation = useMutation({
-    mutationFn: async ({ detailId, description }: { detailId: number, description: string }) => {
+    mutationFn: async ({ detailId, description, subjectId, criteriaId }: { detailId: number, description: string, subjectId: number, criteriaId: number }) => {
       return api.put(`/mentor/students/${selectedStudent?.student_id}/academic-report/detail/${detailId}`, {
-        description
+        description,
+        subject_id: subjectId,
+        criteria_id: criteriaId
       });
     },
     onSuccess: (data, variables) => {
-      setStatusMessage({ id: variables.detailId, type: 'success', text: 'Tersimpan!' });
+      setStatusMessage({ id: variables.criteriaId, type: 'success', text: 'Tersimpan!' });
       queryClient.invalidateQueries({ queryKey: ['mentor-student-overview', selectedStudent?.student_id] });
       setSavingId(null);
       setTimeout(() => setStatusMessage(null), 3000);
     },
     onError: (error, variables) => {
-      setStatusMessage({ id: variables.detailId, type: 'error', text: 'Gagal Simpan' });
+      setStatusMessage({ id: variables.criteriaId, type: 'error', text: 'Gagal Simpan' });
       setSavingId(null);
       setTimeout(() => setStatusMessage(null), 3000);
     }
@@ -125,7 +130,7 @@ function MentorReportContent() {
       const initial: Record<number, string> = {};
       const initialAccordions: Record<number, boolean> = {};
       selectedReport.report_details.forEach((d: any) => {
-        initial[d.id] = d.description_subject || "";
+        initial[d.criteria_id] = d.description_subject || "";
         if (d.rubric_id) initialAccordions[d.rubric_id] = true; // Open all by default
       });
       setLocalDescriptions(initial);
@@ -139,10 +144,10 @@ function MentorReportContent() {
     const groups: Record<number, { name: string, details: any[] }> = {};
     
     selectedReport.report_details.forEach(detail => {
-      const rId = detail.rubric_id;
+      const rId = detail.rubric_id || detail.criteria?.rubric_id;
       if (!groups[rId]) {
         groups[rId] = {
-          name: detail.rubric?.rubric_name || 'Uncategorized',
+          name: detail.rubric?.rubric_name || detail.criteria?.category?.rubric_name || 'Uncategorized',
           details: []
         };
       }
@@ -174,11 +179,13 @@ function MentorReportContent() {
     setView('detail');
   };
 
-  const handleSaveDescription = (detailId: number) => {
-    setSavingId(detailId);
+  const handleSaveDescription = (detailId: number, subjectId: number, criteriaId: number) => {
+    setSavingId(criteriaId);
     updateDescriptionMutation.mutate({ 
       detailId, 
-      description: localDescriptions[detailId] 
+      description: localDescriptions[criteriaId],
+      subjectId,
+      criteriaId
     });
   };
 
@@ -196,10 +203,51 @@ function MentorReportContent() {
     s.nis.includes(searchTerm)
   );
 
-  const filteredReports = reports.filter(r => {
-    const matchTerm = r.subject.term === activeTerm;
+  // Grouping RS & PKN reports into a single "Affective Domain RS & PKN" entry
+  const displayReports = useMemo(() => {
+    const termFiltered = reports.filter(r => r.subject.term === activeTerm);
+    const grouped: Report[] = [];
+    const groupMap: Record<string, Report[]> = {};
+
+    termFiltered.forEach(r => {
+      const groupKey = r.subject.report_group_key;
+      if (groupKey && groupKey.startsWith('GRP_AF_RS_PKN')) {
+        if (!groupMap[groupKey]) groupMap[groupKey] = [];
+        groupMap[groupKey].push(r);
+      } else {
+        grouped.push(r);
+      }
+    });
+
+    // Merge each group into a single virtual report
+    Object.entries(groupMap).forEach(([key, groupReports]) => {
+      const totalAvg = groupReports.reduce((sum, r) => sum + Number(r.average_value || 0), 0);
+      const avgValue = groupReports.length > 0 ? totalAvg / groupReports.length : 0;
+      const allDetails = groupReports.flatMap(r => r.report_details || []);
+      const teacherNames = [...new Set(groupReports.map(r => r.subject.teacher?.name).filter(Boolean))];
+
+      grouped.push({
+        report_id: groupReports[0].report_id,
+        subject_id: groupReports[0].subject_id,
+        average_value: avgValue,
+        subject: {
+          category_subject: 'Affective Domain RS & PKN',
+          term: groupReports[0].subject.term,
+          report_group_key: key,
+          teacher: { name: teacherNames.join(', ') }
+        },
+        report_details: allDetails,
+        _isGrouped: true,
+        _childReports: groupReports
+      });
+    });
+
+    return grouped;
+  }, [reports, activeTerm]);
+
+  const filteredReports = displayReports.filter(r => {
     const matchSubject = r.subject.category_subject.toLowerCase().includes(searchTermSubject.toLowerCase());
-    return matchTerm && matchSubject;
+    return matchSubject;
   });
 
   return (
@@ -467,15 +515,15 @@ function MentorReportContent() {
                                        <textarea 
                                          className="w-full p-4 text-sm bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 font-medium leading-relaxed outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all dark:text-white resize-none"
                                          rows={2}
-                                         value={localDescriptions[detail.id] || ""}
-                                         onChange={(e) => setLocalDescriptions(prev => ({ ...prev, [detail.id]: e.target.value }))}
+                                         value={localDescriptions[detail.criteria_id] || ""}
+                                         onChange={(e) => setLocalDescriptions(prev => ({ ...prev, [detail.criteria_id]: e.target.value }))}
                                          placeholder="Tuliskan deskripsi penilaian di sini..."
                                        />
                                      </div>
 
                                      <div className="flex items-center justify-between pt-2">
                                         <div className="flex items-center gap-2">
-                                           {statusMessage?.id === detail.id && statusMessage != null && (
+                                           {statusMessage?.id === detail.criteria_id && statusMessage != null && (
                                              <span className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-left-2 ${statusMessage.type === 'success' ? 'text-emerald-500' : 'text-rose-500'}`}>
                                                {statusMessage.type === 'success' ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
                                                {statusMessage.text}
@@ -483,15 +531,15 @@ function MentorReportContent() {
                                            )}
                                         </div>
                                         <button 
-                                          onClick={() => handleSaveDescription(detail.id)}
-                                          disabled={savingId === detail.id}
+                                          onClick={() => handleSaveDescription(detail.id, detail.rubric?.subject_id || 0, detail.criteria_id)}
+                                          disabled={savingId === detail.criteria_id}
                                           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${
-                                            savingId === detail.id 
+                                            savingId === detail.criteria_id 
                                             ? 'bg-gray-100 text-gray-400' 
                                             : 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-500/10 active:scale-95'
                                           }`}
                                         >
-                                          {savingId === detail.id ? (
+                                          {savingId === detail.criteria_id ? (
                                             <>
                                               <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                                               Simpan...
