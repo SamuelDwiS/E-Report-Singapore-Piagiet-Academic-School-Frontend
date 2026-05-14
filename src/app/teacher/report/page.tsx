@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import api from '@/lib/axios';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -175,8 +174,11 @@ export default function TeacherReportPage() {
             <div className="p-6 md:p-8 bg-indigo-900 dark:bg-indigo-950 text-white">
               <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-indigo-400">
-                        <Image src="/images/user/owner.jpg" width={64} height={64} alt="Student" />
+                    <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-indigo-400 bg-indigo-50 dark:bg-indigo-900 flex items-center justify-center text-indigo-400">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
                     </div>
                     <div>
                         <p className="text-indigo-300 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">{scoreForm.subject.level_class} • {scoreForm.subject.term}</p>
